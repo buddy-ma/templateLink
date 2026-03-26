@@ -1,0 +1,74 @@
+---
+description: Laravel backend conventions — controllers, requests, services, models
+globs: app/**/*.php,database/**/*.php,routes/**/*.php,tests/**/*.php
+alwaysApply: false
+---
+
+# Backend Conventions
+
+## Controllers
+
+- **Thin controllers** — delegate business logic to Services, not Eloquent directly
+- **One action per method** — `index`, `store`, `show`, `update`, `destroy`
+- Use **constructor injection** for services: `public function __construct(private readonly MyService $service) {}`
+- Return `Inertia::render(...)` for pages, `back()->with(...)` for mutations
+- Always return `RedirectResponse` (never `JsonResponse`) from web controllers — this is Inertia, not API
+
+```php
+// ✅ GOOD
+public function update(UpdateAppSettingsRequest $request): RedirectResponse
+{
+    $this->settings->setMany($request->validated());
+    return back()->with('success', 'Saved.');
+}
+
+// ❌ BAD — inline validation in controller
+public function update(Request $request): RedirectResponse
+{
+    $validated = $request->validate([...]);
+}
+```
+
+## FormRequests
+
+- **Always** use a `FormRequest` when a controller method accepts user input
+- Location: `app/Http/Requests/{Domain}/VerbNounRequest.php`
+- Return `true` from `authorize()` if the route middleware already handles access
+
+```php
+public function authorize(): bool
+{
+    return true; // e.g. permission:access_admin on the route
+}
+
+public function rules(): array
+{
+    return [
+        'branding.app_name' => ['required', 'string', 'max:120'],
+    ];
+}
+```
+
+## Services
+
+- Business logic that spans multiple models or has cache concerns lives in `app/Services/`
+- Services are singletons registered in `AppServiceProvider::register()`
+- Use `flush()` to invalidate cache after mutations
+
+## Models
+
+- Use PHP 8.3 attribute syntax for `Fillable` and `Hidden`
+- Cast booleans explicitly where stored (e.g. feature flags)
+- No business logic inside models — models are data containers only
+
+## Migrations
+
+- Timestamps in filename format: `YYYY_MM_DD_HHMMSS_description.php`
+- Always add `down()` that exactly reverses `up()`
+- Add column indexes when the column is used in `WHERE` clauses
+
+## Admin vs. User Settings
+
+- Routes under `/admin/*` use `['auth', 'verified', 'permission:access_admin']` (Spatie)
+- Routes under `/settings/*` use `['auth']` or `['auth', 'verified']`
+- Never mix admin and user concerns in the same controller

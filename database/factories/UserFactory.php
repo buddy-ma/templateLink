@@ -57,4 +57,14 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => now(),
         ]);
     }
+
+    /**
+     * Grant the Spatie `admin` role (requires permission tables + roles seeded or created by migrations).
+     */
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('admin');
+        });
+    }
 }

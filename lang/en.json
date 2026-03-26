@@ -1,0 +1,75 @@
+{
+    "auth": {
+        "login": "Log in",
+        "logout": "Log out",
+        "register": "Sign up",
+        "email": "Email address",
+        "password": "Password",
+        "remember_me": "Remember me",
+        "forgot_password": "Forgot password?",
+        "no_account": "Don't have an account?",
+        "have_account": "Already have an account?",
+        "or_continue_with": "Or continue with",
+        "login_with_zoho": "Continue with Zoho",
+        "login_title": "Log in to your account",
+        "login_description": "Enter your email and password below to log in",
+        "register_title": "Create an account",
+        "register_description": "Enter your details below to create your account",
+        "name": "Name"
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "settings": "Settings",
+        "profile": "Profile",
+        "security": "Security",
+        "appearance": "Appearance"
+    },
+    "settings": {
+        "title": "Settings",
+        "description": "Manage your profile and account settings",
+        "profile": {
+            "title": "Profile",
+            "description": "Update your name and email address"
+        },
+        "security": {
+            "title": "Security",
+            "description": "Manage your password and two-factor authentication"
+        },
+        "appearance": {
+            "title": "Appearance",
+            "description": "Customize the look and feel of the application"
+        }
+    },
+    "admin": {
+        "settings": {
+            "title": "Application Settings",
+            "description": "Manage global application configuration",
+            "branding": "Branding",
+            "localization": "Localization",
+            "appearance": "Appearance",
+            "authentication": "Authentication",
+            "save": "Save Changes",
+            "saved": "Settings saved"
+        },
+        "translations": {
+            "title": "UI translations",
+            "description": "Edit interface strings for each supported language. Changes apply on the next visit for users using that locale.",
+            "search_placeholder": "Search keys or values…",
+            "key_column": "Key",
+            "value_column": "Text",
+            "rows_count": "{count} strings",
+            "save": "Save translations",
+            "saved": "Translations saved."
+        }
+    },
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "back": "Back",
+        "loading": "Loading...",
+        "success": "Success",
+        "error": "Something went wrong"
+    }
+}

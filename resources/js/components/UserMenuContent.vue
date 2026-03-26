@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { LogOut, Settings, Settings2 } from 'lucide-vue-next';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -12,15 +12,13 @@ import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 
-type Props = {
+defineProps<{
     user: User;
-};
+}>();
 
-const handleLogout = () => {
+function handleLogout(): void {
     router.flushAll();
-};
-
-defineProps<Props>();
+}
 </script>
 
 <template>
@@ -29,7 +27,9 @@ defineProps<Props>();
             <UserInfo :user="user" :show-email="true" />
         </div>
     </DropdownMenuLabel>
+
     <DropdownMenuSeparator />
+
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
@@ -37,15 +37,25 @@ defineProps<Props>();
                 Settings
             </Link>
         </DropdownMenuItem>
+
+        <DropdownMenuItem v-if="user.is_admin" :as-child="true">
+            <Link class="block w-full cursor-pointer" href="/admin/settings">
+                <Settings2 class="mr-2 h-4 w-4" />
+                App Settings
+            </Link>
+        </DropdownMenuItem>
     </DropdownMenuGroup>
+
     <DropdownMenuSeparator />
+
     <DropdownMenuItem :as-child="true">
         <Link
             class="block w-full cursor-pointer"
             :href="logout()"
-            @click="handleLogout"
+            method="post"
             as="button"
             data-test="logout-button"
+            @click="handleLogout"
         >
             <LogOut class="mr-2 h-4 w-4" />
             Log out

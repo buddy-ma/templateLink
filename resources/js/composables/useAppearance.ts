@@ -70,14 +70,14 @@ const handleSystemThemeChange = () => {
     updateTheme(currentAppearance || 'system');
 };
 
-export function initializeTheme(): void {
+export function initializeTheme(serverDefault: Appearance = 'system'): void {
     if (typeof window === 'undefined') {
         return;
     }
 
-    // Initialize theme from saved preference or default to system...
+    // Initialize theme: stored pref → server default → system
     const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || 'system');
+    updateTheme(savedAppearance || serverDefault);
 
     // Set up system theme change listener...
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
@@ -85,15 +85,19 @@ export function initializeTheme(): void {
 
 const appearance = ref<Appearance>('system');
 
-export function useAppearance(): UseAppearanceReturn {
-    onMounted(() => {
-        const savedAppearance = localStorage.getItem(
-            'appearance',
-        ) as Appearance | null;
+export function useAppearance(options?: { defaultAppearance?: Appearance; forceAppearance?: Appearance | null }): UseAppearanceReturn {
+    const forced = options?.forceAppearance ?? null;
+    const serverDefault = options?.defaultAppearance ?? 'system';
 
-        if (savedAppearance) {
-            appearance.value = savedAppearance;
+    onMounted(() => {
+        if (forced) {
+            appearance.value = forced;
+            updateTheme(forced);
+            return;
         }
+
+        const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
+        appearance.value = savedAppearance || serverDefault;
     });
 
     const resolvedAppearance = computed<ResolvedAppearance>(() => {
@@ -105,6 +109,10 @@ export function useAppearance(): UseAppearanceReturn {
     });
 
     function updateAppearance(value: Appearance) {
+        if (forced) {
+            return;
+        }
+
         appearance.value = value;
 
         // Store in localStorage for client-side persistence...

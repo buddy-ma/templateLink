@@ -1,0 +1,60 @@
+---
+description: Core project conventions — always read before making any change
+alwaysApply: true
+---
+
+# Project Overview
+
+**Stack:** PHP 8.3 · Laravel 13 · Inertia.js 2 · Vue 3 (Composition API) · TypeScript · Tailwind CSS v4 · shadcn-vue (Reka UI primitives)
+
+**Key characteristics:**
+- Single-tenant, DB-configurable app (branding, locale, theme, auth via `app_settings` table)
+- Auth: Laravel Fortify (email/password) + Zoho OAuth (Socialite)
+- i18n: `vue-i18n` v11, JSON files under `lang/{locale}.json`
+- Routing: Laravel Wayfinder generates typed route helpers at `resources/js/routes/`
+
+---
+
+## Absolute Rules
+
+- **Never** hardcode the app name — always read from `settings('branding.app_name')` (PHP) or `useBranding().appName` (Vue)
+- **Never** import Reka UI directly in pages or feature components — use the shadcn-vue wrappers in `@/components/ui/`
+- **Never** use inline `style=""` for colors — use Tailwind utilities or CSS custom properties (`var(--primary)`, etc.)
+- **No raw `<a>` tags for internal navigation** — use `<Link>` from `@inertiajs/vue3`
+- **No `router.visit()` outside of forms** — prefer `<Link>` or `useForm().submit()`
+
+---
+
+## File Conventions
+
+| Concern | Location |
+|---------|----------|
+| shadcn-vue primitives | `resources/js/components/ui/` |
+| Shared business components | `resources/js/components/` |
+| Page-level Vue files | `resources/js/pages/` |
+| Composables | `resources/js/composables/` |
+| TypeScript types | `resources/js/types/` |
+| i18n translations | `lang/{locale}.json` |
+| Controllers | `app/Http/Controllers/{Domain}/` |
+| FormRequests | `app/Http/Requests/{Domain}/` |
+| Services | `app/Services/` |
+| Middleware | `app/Http/Middleware/` |
+
+---
+
+## Settings Pattern
+
+```php
+// PHP: read a setting
+settings('branding.app_name', 'fallback');
+
+// PHP: write a setting
+app(AppSettingsService::class)->set('auth.zoho_enabled', true);
+```
+
+```ts
+// Vue: read settings
+const { appName, logoUrl } = useBranding();
+const { currentLocale, supportedLocales } = useLocalization();
+const { zohoEnabled } = useAuthSettings();
+```

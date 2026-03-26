@@ -1,0 +1,75 @@
+{
+    "auth": {
+        "login": "تسجيل الدخول",
+        "logout": "تسجيل الخروج",
+        "register": "إنشاء حساب",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "remember_me": "تذكرني",
+        "forgot_password": "نسيت كلمة المرور؟",
+        "no_account": "ليس لديك حساب؟",
+        "have_account": "لديك حساب بالفعل؟",
+        "or_continue_with": "أو تابع بـ",
+        "login_with_zoho": "المتابعة عبر Zoho",
+        "login_title": "تسجيل الدخول إلى حسابك",
+        "login_description": "أدخل بريدك الإلكتروني وكلمة المرور للدخول",
+        "register_title": "إنشاء حساب جديد",
+        "register_description": "أدخل بياناتك لإنشاء حسابك",
+        "name": "الاسم"
+    },
+    "nav": {
+        "dashboard": "لوحة التحكم",
+        "settings": "الإعدادات",
+        "profile": "الملف الشخصي",
+        "security": "الأمان",
+        "appearance": "المظهر"
+    },
+    "settings": {
+        "title": "الإعدادات",
+        "description": "إدارة ملفك الشخصي وإعدادات الحساب",
+        "profile": {
+            "title": "الملف الشخصي",
+            "description": "تحديث اسمك وعنوان بريدك الإلكتروني"
+        },
+        "security": {
+            "title": "الأمان",
+            "description": "إدارة كلمة المرور والمصادقة الثنائية"
+        },
+        "appearance": {
+            "title": "المظهر",
+            "description": "تخصيص مظهر التطبيق"
+        }
+    },
+    "admin": {
+        "settings": {
+            "title": "إعدادات التطبيق",
+            "description": "إدارة الإعدادات العامة للتطبيق",
+            "branding": "الهوية البصرية",
+            "localization": "الترجمة والإعدادات الإقليمية",
+            "appearance": "المظهر",
+            "authentication": "المصادقة",
+            "save": "حفظ التغييرات",
+            "saved": "تم حفظ الإعدادات"
+        },
+        "translations": {
+            "title": "ترجمات الواجهة",
+            "description": "حرّر النصوص لكل لغة مدعومة. تُطبَّق التغييرات عند التحميل التالي لتلك اللغة.",
+            "search_placeholder": "ابحث في المفاتيح أو النصوص…",
+            "key_column": "المفتاح",
+            "value_column": "النص",
+            "rows_count": "{count} نصًا",
+            "save": "حفظ الترجمات",
+            "saved": "تم حفظ الترجمات."
+        }
+    },
+    "common": {
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "back": "رجوع",
+        "loading": "جارٍ التحميل...",
+        "success": "نجاح",
+        "error": "حدث خطأ ما"
+    }
+}

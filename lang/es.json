@@ -1,0 +1,75 @@
+{
+    "auth": {
+        "login": "Iniciar sesión",
+        "logout": "Cerrar sesión",
+        "register": "Registrarse",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "remember_me": "Recuérdame",
+        "forgot_password": "¿Olvidaste tu contraseña?",
+        "no_account": "¿No tienes cuenta?",
+        "have_account": "¿Ya tienes cuenta?",
+        "or_continue_with": "O continúa con",
+        "login_with_zoho": "Continuar con Zoho",
+        "login_title": "Inicia sesión en tu cuenta",
+        "login_description": "Ingresa tu correo y contraseña para iniciar sesión",
+        "register_title": "Crear una cuenta",
+        "register_description": "Ingresa tus datos para crear tu cuenta",
+        "name": "Nombre"
+    },
+    "nav": {
+        "dashboard": "Panel",
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "security": "Seguridad",
+        "appearance": "Apariencia"
+    },
+    "settings": {
+        "title": "Configuración",
+        "description": "Gestiona tu perfil y la configuración de la cuenta",
+        "profile": {
+            "title": "Perfil",
+            "description": "Actualiza tu nombre y dirección de correo"
+        },
+        "security": {
+            "title": "Seguridad",
+            "description": "Gestiona tu contraseña y la autenticación de dos factores"
+        },
+        "appearance": {
+            "title": "Apariencia",
+            "description": "Personaliza el aspecto de la aplicación"
+        }
+    },
+    "admin": {
+        "settings": {
+            "title": "Configuración de la aplicación",
+            "description": "Gestiona la configuración global de la aplicación",
+            "branding": "Marca",
+            "localization": "Localización",
+            "appearance": "Apariencia",
+            "authentication": "Autenticación",
+            "save": "Guardar cambios",
+            "saved": "Configuración guardada"
+        },
+        "translations": {
+            "title": "Traducciones de la interfaz",
+            "description": "Edita los textos para cada idioma admitido. Los cambios se aplican en la siguiente carga para ese idioma.",
+            "search_placeholder": "Buscar claves o textos…",
+            "key_column": "Clave",
+            "value_column": "Texto",
+            "rows_count": "{count} cadenas",
+            "save": "Guardar traducciones",
+            "saved": "Traducciones guardadas."
+        }
+    },
+    "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "back": "Volver",
+        "loading": "Cargando...",
+        "success": "Éxito",
+        "error": "Algo salió mal"
+    }
+}

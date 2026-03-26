@@ -1,0 +1,97 @@
+---
+description: Vue 3 + TypeScript + shadcn-vue frontend conventions
+globs: resources/js/**/*.vue,resources/js/**/*.ts
+alwaysApply: false
+---
+
+# Frontend Conventions
+
+## Components
+
+- **Only** import UI primitives from `@/components/ui/` — never from `reka-ui` directly in pages
+- Use `<Button>`, `<Input>`, `<Card>`, `<Separator>`, `<Badge>` etc. from shadcn-vue
+- Layout components: `AppLayout`, `AuthLayout`, `AdminLayout`, `SettingsLayout`
+- Wrap every layout root with `<BrandProvider>` so DB brand colors apply
+
+```vue
+<!-- ✅ GOOD -->
+<script setup lang="ts">
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+</script>
+
+<!-- ❌ BAD — importing Reka directly in a page -->
+<script setup lang="ts">
+import { Button } from 'reka-ui';
+</script>
+```
+
+## Composables for settings
+
+Always use composables — never read `usePage().props` directly for app settings:
+
+```ts
+// ✅
+const { appName, logoUrl, primaryColor } = useBranding();
+const { currentLocale, supportedLocales } = useLocalization();
+const { zohoEnabled, passwordLoginEnabled } = useAuthSettings();
+const { defaultAppearance, forceAppearance } = useThemeSettings();
+
+// ❌
+const appName = usePage().props.appSettings.branding.appName;
+```
+
+## i18n
+
+- Use `useI18n()` from `vue-i18n` for all user-facing strings
+- Add new strings to ALL locale files (`lang/en.json`, `fr.json`, `es.json`, `ar.json`)
+
+```vue
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+</script>
+
+<template>
+  <Button>{{ t('auth.login') }}</Button>
+</template>
+```
+
+## Appearance
+
+- Dark mode is toggled by `.dark` class on `<html>` — never manually add/remove
+- Use `useAppearance()` composable to read/set theme
+- Pass `{ defaultAppearance, forceAppearance }` options from `useThemeSettings()`
+
+## Navigation
+
+- Internal links → `<Link href="...">` from `@inertiajs/vue3`
+- Named routes → Wayfinder helpers: `import { dashboard } from '@/routes'`
+- External links → regular `<a target="_blank" rel="noopener noreferrer">`
+
+## TypeScript
+
+- `strict: true` is enforced — no `any`, no `// @ts-ignore`
+- Shared Inertia page props are typed via `declare module '@inertiajs/core'` in `global.d.ts`
+- New shared props require a matching type in `resources/js/types/`
+
+## Icons
+
+- **Only `lucide-vue-next`** — never use heroicons, fontawesome, or any other icon library
+- Import icons by name: `import { Languages, Settings2, LayoutGrid } from 'lucide-vue-next'`
+- Use semantic icon names that match intent (e.g. `<Languages />` for locale, `<Moon />` for dark mode)
+- Size via Tailwind: `class="size-4"` (not `width`/`height` props)
+
+```vue
+<!-- ✅ GOOD -->
+<Languages class="size-4 text-muted-foreground" />
+
+<!-- ❌ BAD — wrong library -->
+<HeroIcon name="globe" />
+```
+
+## Styling
+
+- All colors via Tailwind semantic utilities (`text-primary`, `bg-background`, `border-border`)
+- Avoid hardcoded hex values — use CSS custom properties: `var(--primary)`
+- `cn()` from `@/lib/utils` for conditional class merging

@@ -1,0 +1,75 @@
+{
+    "auth": {
+        "login": "Se connecter",
+        "logout": "Se déconnecter",
+        "register": "S'inscrire",
+        "email": "Adresse e-mail",
+        "password": "Mot de passe",
+        "remember_me": "Se souvenir de moi",
+        "forgot_password": "Mot de passe oublié ?",
+        "no_account": "Vous n'avez pas de compte ?",
+        "have_account": "Vous avez déjà un compte ?",
+        "or_continue_with": "Ou continuer avec",
+        "login_with_zoho": "Continuer avec Zoho",
+        "login_title": "Connectez-vous à votre compte",
+        "login_description": "Entrez votre e-mail et mot de passe ci-dessous",
+        "register_title": "Créer un compte",
+        "register_description": "Entrez vos informations pour créer votre compte",
+        "name": "Nom"
+    },
+    "nav": {
+        "dashboard": "Tableau de bord",
+        "settings": "Paramètres",
+        "profile": "Profil",
+        "security": "Sécurité",
+        "appearance": "Apparence"
+    },
+    "settings": {
+        "title": "Paramètres",
+        "description": "Gérez votre profil et les paramètres du compte",
+        "profile": {
+            "title": "Profil",
+            "description": "Mettez à jour votre nom et votre adresse e-mail"
+        },
+        "security": {
+            "title": "Sécurité",
+            "description": "Gérez votre mot de passe et l'authentification à deux facteurs"
+        },
+        "appearance": {
+            "title": "Apparence",
+            "description": "Personnalisez l'aspect de l'application"
+        }
+    },
+    "admin": {
+        "settings": {
+            "title": "Paramètres de l'application",
+            "description": "Gérez la configuration globale de l'application",
+            "branding": "Identité visuelle",
+            "localization": "Localisation",
+            "appearance": "Apparence",
+            "authentication": "Authentification",
+            "save": "Enregistrer les modifications",
+            "saved": "Paramètres sauvegardés"
+        },
+        "translations": {
+            "title": "Traductions de l'interface",
+            "description": "Modifiez les textes pour chaque langue prise en charge. Les changements s'appliquent au prochain chargement pour cette langue.",
+            "search_placeholder": "Rechercher une clé ou un texte…",
+            "key_column": "Clé",
+            "value_column": "Texte",
+            "rows_count": "{count} chaînes",
+            "save": "Enregistrer les traductions",
+            "saved": "Traductions enregistrées."
+        }
+    },
+    "common": {
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "edit": "Modifier",
+        "back": "Retour",
+        "loading": "Chargement...",
+        "success": "Succès",
+        "error": "Une erreur s'est produite"
+    }
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
+import { useAuthSettings } from '@/composables/useAppSettings';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
@@ -18,6 +20,8 @@ defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const authSettings = useAuthSettings();
 </script>
 
 <template>
@@ -34,7 +38,27 @@ defineProps<{
             {{ status }}
         </div>
 
+        <!-- Zoho OAuth button -->
+        <div v-if="authSettings.zohoEnabled" class="flex flex-col gap-3">
+            <Button variant="outline" class="w-full" as-child>
+                <Link href="/auth/zoho" :external="true">
+                    <svg class="mr-2 size-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                    </svg>
+                    Continue with Zoho
+                </Link>
+            </Button>
+
+            <div v-if="authSettings.passwordLoginEnabled" class="relative flex items-center gap-3 py-1">
+                <Separator class="flex-1" />
+                <span class="text-xs text-muted-foreground">or</span>
+                <Separator class="flex-1" />
+            </div>
+        </div>
+
+        <!-- Password login form -->
         <Form
+            v-if="authSettings.passwordLoginEnabled"
             v-bind="store.form()"
             :reset-on-success="['password']"
             v-slot="{ errors, processing }"

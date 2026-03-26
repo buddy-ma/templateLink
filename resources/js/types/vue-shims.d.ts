@@ -3,3 +3,9 @@ declare module '*.vue' {
     const component: DefineComponent;
     export default component;
 }
+
+declare module 'vue-select' {
+    import type { DefineComponent } from 'vue';
+    const component: DefineComponent<object, object, unknown>;
+    export default component;
+}
