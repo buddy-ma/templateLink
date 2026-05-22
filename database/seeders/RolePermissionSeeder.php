@@ -23,6 +23,7 @@ class RolePermissionSeeder extends Seeder
             'manage_settings',
             'manage_translations',
             'manage_roles',
+            'impersonate_users',
         ];
 
         foreach ($permissionNames as $name) {
@@ -31,6 +32,11 @@ class RolePermissionSeeder extends Seeder
 
         $admin = Role::findOrCreate('admin', 'web');
         $admin->syncPermissions(Permission::whereIn('name', $permissionNames)->get());
+
+        $developer = Role::findOrCreate('developer', 'web');
+        $developer->syncPermissions(
+            Permission::whereIn('name', ['impersonate_users'])->get(),
+        );
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }

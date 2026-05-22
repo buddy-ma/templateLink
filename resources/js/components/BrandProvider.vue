@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { watch } from 'vue';
 import I18nLiveSync from '@/components/I18nLiveSync.vue';
 import { useBranding } from '@/composables/useAppSettings';
 
@@ -10,16 +10,18 @@ const UPLOAD_STYLE_ID = 'app-branding-upload-font';
 
 function applyBrandColors(): void {
     const root = document.documentElement;
-    root.style.setProperty('--primary', `hsl(${branding.primaryColor})`);
-    root.style.setProperty('--primary-foreground', `hsl(${branding.primaryForegroundColor})`);
-    root.style.setProperty('--sidebar-primary', `hsl(${branding.sidebarPrimaryColor})`);
-    root.style.setProperty('--sidebar-primary-foreground', `hsl(${branding.primaryForegroundColor})`);
+    const b = branding.value;
+    root.style.setProperty('--primary', `hsl(${b.primaryColor})`);
+    root.style.setProperty('--primary-foreground', `hsl(${b.primaryForegroundColor})`);
+    root.style.setProperty('--sidebar-primary', `hsl(${b.sidebarPrimaryColor})`);
+    root.style.setProperty('--sidebar-primary-foreground', `hsl(${b.primaryForegroundColor})`);
 }
 
 function applyFontStack(): void {
     const root = document.documentElement;
-    if (branding.fontStack) {
-        root.style.setProperty('--font-sans', branding.fontStack);
+    const stack = branding.value.fontStack;
+    if (stack) {
+        root.style.setProperty('--font-sans', stack);
     }
 }
 
@@ -62,38 +64,28 @@ function ensureUploadFontFace(url: string | null | undefined, face: string | nul
 
 function applyFonts(): void {
     applyFontStack();
-    if (branding.fontSource === 'google') {
-        ensureGoogleFontLink(branding.googleFontStylesheetUrl ?? null);
+    const b = branding.value;
+    if (b.fontSource === 'google') {
+        ensureGoogleFontLink(b.googleFontStylesheetUrl ?? null);
         ensureUploadFontFace(null, null);
-    } else if (branding.fontSource === 'upload') {
+    } else if (b.fontSource === 'upload') {
         ensureGoogleFontLink(null);
-        ensureUploadFontFace(branding.fontUploadUrl ?? null, branding.fontFaceName ?? null);
+        ensureUploadFontFace(b.fontUploadUrl ?? null, b.fontFaceName ?? null);
     } else {
         ensureGoogleFontLink(null);
         ensureUploadFontFace(null, null);
     }
 }
 
-onMounted(() => {
+function applyAll(): void {
     applyBrandColors();
     applyFonts();
-});
+}
 
 watch(
-    () => [branding.primaryColor, branding.primaryForegroundColor, branding.sidebarPrimaryColor],
-    () => applyBrandColors(),
-);
-
-watch(
-    () => [
-        branding.fontStack,
-        branding.fontSource,
-        branding.fontUploadUrl,
-        branding.fontFaceName,
-        branding.googleFontStylesheetUrl,
-    ],
-    () => applyFonts(),
-    { deep: true },
+    branding,
+    () => applyAll(),
+    { deep: true, immediate: true },
 );
 </script>
 

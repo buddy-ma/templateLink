@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import { formPropsFromRoute } from '@/wayfinder';
 import { store } from '@/routes/password/confirm';
 </script>
 
@@ -17,7 +18,7 @@ import { store } from '@/routes/password/confirm';
         <Head title="Confirm password" />
 
         <Form
-            v-bind="store.form()"
+            v-bind="formPropsFromRoute(store())"
             reset-on-success
             v-slot="{ errors, processing }"
         >

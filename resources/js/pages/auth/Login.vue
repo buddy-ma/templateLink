@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { useAuthSettings } from '@/composables/useAppSettings';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import { formPropsFromRoute } from '@/wayfinder';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
@@ -59,7 +60,7 @@ const authSettings = useAuthSettings();
         <!-- Password login form -->
         <Form
             v-if="authSettings.passwordLoginEnabled"
-            v-bind="store.form()"
+            v-bind="formPropsFromRoute(store())"
             :reset-on-success="['password']"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"

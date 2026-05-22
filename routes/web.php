@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+
+Route::middleware(['auth'])->post('impersonate/stop', [ImpersonationController::class, 'stop'])
+    ->name('impersonate.stop');
 
 Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),

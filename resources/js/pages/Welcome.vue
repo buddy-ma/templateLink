@@ -15,7 +15,7 @@ withDefaults(
 );
 
 const page = usePage();
-const { appName, logoUrl } = useBranding();
+const branding = useBranding();
 
 const features = [
     {
@@ -42,7 +42,7 @@ const features = [
 </script>
 
 <template>
-    <Head :title="`Welcome — ${appName}`" />
+    <Head :title="`Welcome — ${branding.appName}`" />
 
     <BrandProvider>
         <div class="flex min-h-screen flex-col bg-background text-foreground">
@@ -51,12 +51,17 @@ const features = [
             <header class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
                 <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
                     <div class="flex items-center gap-2.5">
-                        <img v-if="logoUrl" :src="logoUrl" :alt="appName" class="h-7 w-auto" />
+                        <img
+                            v-if="branding.logoUrl"
+                            :src="branding.logoUrl"
+                            :alt="branding.appName"
+                            class="h-7 w-auto"
+                        />
                         <svg v-else class="h-7 w-7 text-primary" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="40" height="40" rx="10" fill="currentColor" fill-opacity="0.12" />
                             <path d="M10 28 L20 12 L30 28 M14 22 H26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="font-semibold tracking-tight">{{ appName }}</span>
+                        <span class="font-semibold tracking-tight">{{ branding.appName }}</span>
                     </div>
 
                     <nav class="flex items-center gap-2">
@@ -131,7 +136,7 @@ const features = [
             <footer class="border-t border-border">
                 <div class="mx-auto flex h-12 max-w-5xl items-center justify-center px-4">
                     <p class="text-xs text-muted-foreground">
-                        &copy; {{ new Date().getFullYear() }} {{ appName }}. All rights reserved.
+                        &copy; {{ new Date().getFullYear() }} {{ branding.appName }}. All rights reserved.
                     </p>
                 </div>
             </footer>

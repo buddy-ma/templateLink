@@ -30,7 +30,7 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ $inertiaDocumentTitle ?? config('app.name', 'Laravel') }}</title>
 
         @if (! empty($faviconUrl ?? null))
             <link rel="icon" href="{{ $faviconUrl }}">

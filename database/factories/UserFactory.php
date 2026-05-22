@@ -67,4 +67,14 @@ class UserFactory extends Factory
             $user->assignRole('admin');
         });
     }
+
+    /**
+     * Grant the Spatie `developer` role (impersonation / support; no admin panel by default).
+     */
+    public function developer(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('developer');
+        });
+    }
 }

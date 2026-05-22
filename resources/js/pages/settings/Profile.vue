@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { formPropsFromRoute } from '@/wayfinder';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
@@ -47,7 +48,7 @@ const user = computed(() => page.props.auth.user);
                 />
 
                 <Form
-                    v-bind="ProfileController.update.form()"
+                    v-bind="formPropsFromRoute(ProfileController.update())"
                     class="space-y-6"
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >

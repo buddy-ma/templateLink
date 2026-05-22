@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings, Settings2 } from 'lucide-vue-next';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { LogOut, Settings, Settings2, UserX } from 'lucide-vue-next';
+import { computed } from 'vue';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -12,12 +13,25 @@ import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 
-defineProps<{
+const props = defineProps<{
     user: User;
 }>();
 
+const page = usePage();
+
+const isAdminRole = computed(() => {
+    const roles = props.user.roles;
+    return Array.isArray(roles) && roles.includes('admin');
+});
+
+const impersonationActive = computed(() => page.props.impersonation?.active === true);
+
 function handleLogout(): void {
     router.flushAll();
+}
+
+function stopImpersonating(): void {
+    router.post('/impersonate/stop', {});
 }
 </script>
 
@@ -31,6 +45,15 @@ function handleLogout(): void {
     <DropdownMenuSeparator />
 
     <DropdownMenuGroup>
+        <DropdownMenuItem
+            v-if="impersonationActive"
+            class="cursor-pointer"
+            @click.prevent="stopImpersonating"
+        >
+            <UserX class="mr-2 h-4 w-4" />
+            Stop impersonating
+        </DropdownMenuItem>
+
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
                 <Settings class="mr-2 h-4 w-4" />
@@ -38,7 +61,7 @@ function handleLogout(): void {
             </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem v-if="user.is_admin" :as-child="true">
+        <DropdownMenuItem v-if="isAdminRole" :as-child="true">
             <Link class="block w-full cursor-pointer" href="/admin/settings">
                 <Settings2 class="mr-2 h-4 w-4" />
                 App Settings

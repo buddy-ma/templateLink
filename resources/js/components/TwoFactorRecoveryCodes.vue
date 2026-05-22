@@ -12,6 +12,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
+import { formPropsFromRoute } from '@/wayfinder';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
 
 const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
@@ -64,8 +65,7 @@ onMounted(async () => {
 
                 <Form
                     v-if="isRecoveryCodesVisible && recoveryCodesList.length"
-                    v-bind="regenerateRecoveryCodes.form()"
-                    method="post"
+                    v-bind="formPropsFromRoute(regenerateRecoveryCodes())"
                     :options="{ preserveScroll: true }"
                     @success="fetchRecoveryCodes"
                     #default="{ processing }"

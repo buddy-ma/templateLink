@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import { formPropsFromRoute } from '@/wayfinder';
 import { login } from '@/routes';
 import { email } from '@/routes/password';
 
@@ -30,7 +31,7 @@ defineProps<{
         </div>
 
         <div class="space-y-6">
-            <Form v-bind="email.form()" v-slot="{ errors, processing }">
+            <Form v-bind="formPropsFromRoute(email())" v-slot="{ errors, processing }">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input

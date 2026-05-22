@@ -17,6 +17,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { formPropsFromRoute } from '@/wayfinder';
 
 const passwordInput = useTemplateRef('passwordInput');
 </script>
@@ -45,7 +46,7 @@ const passwordInput = useTemplateRef('passwordInput');
                 </DialogTrigger>
                 <DialogContent>
                     <Form
-                        v-bind="ProfileController.destroy.form()"
+                        v-bind="formPropsFromRoute(ProfileController.destroy())"
                         reset-on-success
                         @error="() => passwordInput?.focus()"
                         :options="{

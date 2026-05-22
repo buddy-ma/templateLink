@@ -52,6 +52,14 @@ class HandleInertiaRequests extends Middleware
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'appSettings' => $this->buildAppSettings(),
             'liveLocaleMessages' => $this->loadLiveLocaleMessages(),
+            'impersonation' => [
+                'active' => $request->session()->has('impersonate.original_user_id'),
+                'originalUserId' => $request->session()->get('impersonate.original_user_id'),
+            ],
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
         ];
     }
 

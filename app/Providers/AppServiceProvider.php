@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\UserPolicy;
 use App\Services\AppSettingsService;
 use App\Support\BrandingFont;
 use Carbon\CarbonImmutable;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -30,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(User::class, UserPolicy::class);
+
         $this->configureDefaults();
         $this->configureSocialite();
         $this->configureRootViewFonts();
@@ -46,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
             $href = BrandingFont::stylesheetHref($settings);
             $view->with('fontStylesheetHref', $href);
             $view->with('faviconUrl', $settings->get('branding.favicon_url'));
+            $view->with(
+                'inertiaDocumentTitle',
+                $settings->get('branding.app_name', config('app.name')),
+            );
         });
     }
 

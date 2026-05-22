@@ -70,6 +70,10 @@ class AppSettingsController extends Controller
 
         $this->settings->setMany($flat);
 
+        if (isset($validated['localization']['default_locale'])) {
+            $request->session()->put('locale', $validated['localization']['default_locale']);
+        }
+
         return back()->with('success', 'Settings saved successfully.');
     }
 

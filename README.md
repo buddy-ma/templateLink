@@ -2,6 +2,8 @@
 
 A production-ready Laravel + Inertia + Vue 3 starter that is **fully configurable from the database** — branding, locales, theme, authentication providers, and UI copy — with **Spatie Laravel Permission** for roles and fine-grained permissions.
 
+**New here?** Follow **[start_here.md](start_here.md)** for setup, default users, roles, troubleshooting, and project layout.
+
 ## Stack
 
 | Layer | Technology |
@@ -44,6 +46,7 @@ php artisan storage:link
 | **Roles & permissions** | See [Roles & permissions](#roles--permissions). |
 | **App settings** | Defaults from `AppSettingsSeeder` (branding, locales, theme, auth toggles). |
 | **Demo admin user** | `test@example.com` / `password` (change in production). |
+| **Demo developer user** | `developer@example.com` / `password` — impersonation only. |
 
 ---
 
@@ -55,23 +58,34 @@ The app uses **Spatie Laravel Permission** with the `web` guard.
 
 | Permission | Purpose |
 |------------|---------|
-| `access_admin` | Enter any `/admin/*` route (settings, translations, design guide). |
+| `access_admin` | Enter most `/admin/*` routes (settings, translations, design guide) when granted. |
+| `impersonate_users` | Open `/admin/users` and start impersonation (`POST /admin/users/{user}/impersonate`). |
 | `manage_settings` | Reserved for app settings (currently granted to `admin`; use for route-level splits later). |
 | `manage_translations` | Reserved for translation UI (same as above). |
+| `manage_roles` | Roles & permissions admin UI. |
 
-### Default role
+### Default roles
 
 | Role | Permissions |
 |------|-------------|
-| `admin` | All of the above. |
+| `admin` | All permissions (including `impersonate_users`). |
+| `developer` | `impersonate_users` only — user directory + impersonation, no config sidebar. |
 
 ### Middleware
 
-Admin routes use:
+Most admin configuration routes use:
 
 ```php
 ['auth', 'verified', 'permission:access_admin']
 ```
+
+The **user directory** (`/admin/users`) and **start impersonation** route use:
+
+```php
+['auth', 'verified', 'permission:impersonate_users']
+```
+
+**Stop impersonation** (`POST /impersonate/stop`) uses `auth` only so the impersonated session can exit cleanly.
 
 Aliases registered in `bootstrap/app.php`: `role`, `permission`, `role_or_permission`.
 

@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { formPropsFromRoute } from '@/wayfinder';
 import { edit } from '@/routes/security';
 import { disable, enable } from '@/routes/two-factor';
 import type { BreadcrumbItem } from '@/types';
@@ -57,7 +58,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                 />
 
                 <Form
-                    v-bind="SecurityController.update.form()"
+                    v-bind="formPropsFromRoute(SecurityController.update())"
                     :options="{
                         preserveScroll: true,
                     }"
@@ -160,7 +161,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                         </Button>
                         <Form
                             v-else
-                            v-bind="enable.form()"
+                            v-bind="formPropsFromRoute(enable())"
                             @success="showSetupModal = true"
                             #default="{ processing }"
                         >
@@ -182,7 +183,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                     </p>
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" #default="{ processing }">
+                        <Form v-bind="formPropsFromRoute(disable())" #default="{ processing }">
                             <Button
                                 variant="destructive"
                                 type="submit"

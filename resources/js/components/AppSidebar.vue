@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Languages, LayoutGrid, Settings2, Shield } from 'lucide-vue-next';
+import { BookOpen, Languages, LayoutGrid, Settings2, Shield, Users } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -20,14 +20,16 @@ import type { NavItem } from '@/types';
 
 const page = usePage();
 
-/** Matches admin routes protected by `permission:access_admin`. */
-const canAccessAdmin = computed(() => {
-    const perms = page.props.auth.user?.permissions;
-    if (Array.isArray(perms)) {
-        return perms.includes('access_admin');
-    }
+/** Config / admin panel: visible only to users with the `admin` role. */
+const isAdminRole = computed(() => {
+    const roles = page.props.auth.user?.roles;
+    return Array.isArray(roles) && roles.includes('admin');
+});
 
-    return page.props.auth.user?.is_admin === true;
+/** User directory & impersonation (admin + developer roles). */
+const canImpersonateUsers = computed(() => {
+    const perms = page.props.auth.user?.permissions;
+    return Array.isArray(perms) && perms.includes('impersonate_users');
 });
 
 const canManageRoles = computed(() => {
@@ -39,15 +41,28 @@ const canManageRoles = computed(() => {
     return false;
 });
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+const mainNavItems = computed<NavItem[]>(() => {
+    const items: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+    ];
+    if (canImpersonateUsers.value) {
+        items.push({
+            title: 'Users',
+            href: '/admin/users',
+            icon: Users,
+        });
+    }
+    return items;
+});
 
 const adminNavItems = computed<NavItem[]>(() => {
+    if (!isAdminRole.value) {
+        return [];
+    }
     const items: NavItem[] = [
         {
             title: 'App Settings',
@@ -95,7 +110,7 @@ const adminNavItems = computed<NavItem[]>(() => {
         <SidebarContent>
             <NavMain :items="mainNavItems" />
 
-            <template v-if="canAccessAdmin">
+            <template v-if="adminNavItems.length > 0">
                 <SidebarSeparator />
                 <NavMain :items="adminNavItems" label="Admin" />
             </template>

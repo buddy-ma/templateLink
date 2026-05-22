@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
-import type { PageProps } from '@inertiajs/core';
+import { Link } from '@inertiajs/vue3';
 import BrandProvider from '@/components/BrandProvider.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useAppName } from '@/composables/useAppSettings';
 
-type FlashProps = PageProps & { flash?: { success?: string } };
-const page = usePage<FlashProps>();
 const appName = useAppName();
 
 const navItems = [
@@ -45,14 +42,6 @@ const navItems = [
                     </div>
                 </div>
             </header>
-
-            <!-- Flash messages -->
-            <div
-                v-if="page.props.flash?.success"
-                class="bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400"
-            >
-                {{ page.props.flash.success }}
-            </div>
 
             <main class="container flex-1 px-4 py-8">
                 <slot />

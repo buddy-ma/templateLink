@@ -24,5 +24,15 @@ class DatabaseSeeder extends Seeder
             ],
         );
         $user->assignRole('admin');
+
+        $developer = User::firstOrCreate(
+            ['email' => 'developer@example.com'],
+            [
+                'name' => 'Developer',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ],
+        );
+        $developer->assignRole('developer');
     }
 }

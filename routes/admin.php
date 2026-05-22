@@ -1,11 +1,21 @@
 <?php
 
 use App\Http\Controllers\Admin\AppSettingsController;
+use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TranslationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::middleware(['auth', 'verified', 'permission:impersonate_users'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('users', [ImpersonationController::class, 'index'])->name('users.index');
+        Route::post('users/{user}/impersonate', [ImpersonationController::class, 'start'])
+            ->name('users.impersonate');
+    });
 
 Route::middleware(['auth', 'verified', 'permission:access_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/settings');

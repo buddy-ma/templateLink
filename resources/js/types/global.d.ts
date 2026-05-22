@@ -22,6 +22,14 @@ declare module '@inertiajs/core' {
             sidebarOpen: boolean;
             appSettings: AppSettings;
             liveLocaleMessages?: Record<string, unknown>;
+            impersonation?: {
+                active: boolean;
+                originalUserId?: number | null;
+            };
+            flash?: {
+                success?: string | null;
+                error?: string | null;
+            };
             [key: string]: unknown;
         };
     }
