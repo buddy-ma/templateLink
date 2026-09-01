@@ -70,33 +70,49 @@ const handleSystemThemeChange = () => {
     updateTheme(currentAppearance || 'system');
 };
 
-export function initializeTheme(serverDefault: Appearance = 'system'): void {
+const appearance = ref<Appearance>('system');
+let forcedAppearance: Appearance | null = null;
+
+export function initializeTheme(
+    serverDefault: Appearance = 'system',
+    forceAppearance: Appearance | null = null,
+): void {
     if (typeof window === 'undefined') {
         return;
     }
 
-    // Initialize theme: stored pref → server default → system
-    const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || serverDefault);
+    forcedAppearance =
+        forceAppearance === 'light' || forceAppearance === 'dark'
+            ? forceAppearance
+            : null;
+
+    // Forced theme wins; otherwise stored pref → server default → system
+    const nextAppearance =
+        forcedAppearance ?? getStoredAppearance() ?? serverDefault;
+
+    appearance.value = nextAppearance;
+    updateTheme(nextAppearance);
 
     // Set up system theme change listener...
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
 }
 
-const appearance = ref<Appearance>('system');
-
-export function useAppearance(options?: { defaultAppearance?: Appearance; forceAppearance?: Appearance | null }): UseAppearanceReturn {
-    const forced = options?.forceAppearance ?? null;
+export function useAppearance(options?: {
+    defaultAppearance?: Appearance;
+    forceAppearance?: Appearance | null;
+}): UseAppearanceReturn {
+    const forced = options?.forceAppearance ?? forcedAppearance;
     const serverDefault = options?.defaultAppearance ?? 'system';
 
     onMounted(() => {
-        if (forced) {
+        if (forced === 'light' || forced === 'dark') {
+            forcedAppearance = forced;
             appearance.value = forced;
             updateTheme(forced);
             return;
         }
 
-        const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
+        const savedAppearance = getStoredAppearance();
         appearance.value = savedAppearance || serverDefault;
     });
 
@@ -109,7 +125,7 @@ export function useAppearance(options?: { defaultAppearance?: Appearance; forceA
     });
 
     function updateAppearance(value: Appearance) {
-        if (forced) {
+        if (forcedAppearance === 'light' || forcedAppearance === 'dark') {
             return;
         }
 

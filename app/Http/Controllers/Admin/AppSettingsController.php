@@ -95,7 +95,8 @@ class AppSettingsController extends Controller
         // Use Storage::disk('public') explicitly — the default disk is "local" (storage/app/private),
         // so $file->store(..., 'public') must not be relied on if mis-resolved; putFile always targets app/public.
         $path = Storage::disk('public')->putFile('branding', $request->file('logo'));
-        $url = Storage::disk('public')->url($path);
+        // Store a root-relative URL so the logo works regardless of APP_URL / host.
+        $url = '/storage/'.$path;
 
         $this->settings->set('branding.logo_url', $url);
 
@@ -116,7 +117,7 @@ class AppSettingsController extends Controller
         }
 
         $path = Storage::disk('public')->putFile('branding/favicons', $request->file('favicon'));
-        $url = Storage::disk('public')->url($path);
+        $url = '/storage/'.$path;
 
         $this->settings->set('branding.favicon_url', $url);
 
@@ -137,7 +138,7 @@ class AppSettingsController extends Controller
         }
 
         $path = Storage::disk('public')->putFile('fonts', $request->file('font'));
-        $url = Storage::disk('public')->url($path);
+        $url = '/storage/'.$path;
 
         $this->settings->setMany([
             'branding.font_source' => 'upload',

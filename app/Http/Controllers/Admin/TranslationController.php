@@ -21,9 +21,9 @@ class TranslationController extends Controller
     public function index(Request $request): Response
     {
         $supported = $this->supportedLocales();
-        $locale = $request->query('locale', $supported[0] ?? 'en');
+        $locale = $request->query('locale', $supported[0] ?? 'fr');
         if (! in_array($locale, $supported, true)) {
-            $locale = $supported[0] ?? 'en';
+            $locale = $supported[0] ?? 'fr';
         }
 
         $messages = $this->readLocaleFile($locale);
@@ -65,16 +65,16 @@ class TranslationController extends Controller
      */
     private function supportedLocales(): array
     {
-        $raw = $this->settings->get('localization.supported_locales', ['en']);
+        $raw = $this->settings->get('localization.supported_locales', ['fr', 'en']);
         if (is_string($raw)) {
-            $raw = json_decode($raw, true) ?? ['en'];
+            $raw = json_decode($raw, true) ?? ['fr', 'en'];
         }
         if (! is_array($raw)) {
-            $raw = ['en'];
+            $raw = ['fr', 'en'];
         }
         $locales = array_values(array_unique(array_filter(array_map('strval', $raw))));
         if ($locales === []) {
-            $locales = ['en'];
+            $locales = ['fr', 'en'];
         }
 
         return $locales;

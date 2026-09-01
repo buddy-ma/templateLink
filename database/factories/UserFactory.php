@@ -77,4 +77,46 @@ class UserFactory extends Factory
             $user->assignRole('developer');
         });
     }
+
+    public function projectManager(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('project_manager');
+        });
+    }
+
+    public function responsableMarketing(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('responsable_marketing');
+        });
+    }
+
+    public function validator(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('validator');
+        });
+    }
+
+    public function reglementaires(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('reglementaires');
+        });
+    }
+
+    public function businessDev(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('business_dev');
+        });
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole('super_admin');
+        });
+    }
 }

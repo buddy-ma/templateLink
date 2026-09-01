@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { formPropsFromRoute } from '@/wayfinder';
+import { formPropsFromRoute } from '@/lib/formPropsFromRoute';
 import { store } from '@/routes/password/confirm';
 </script>
 

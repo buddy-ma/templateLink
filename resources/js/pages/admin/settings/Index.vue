@@ -76,17 +76,17 @@ const brandingForm = useForm({
 
 const rawLocales = props.settings['localization.supported_locales'];
 const parsedLocales: string[] = (() => {
-    if (!rawLocales) return ['en'];
+    if (!rawLocales) return ['fr', 'en'];
     try {
         return JSON.parse(rawLocales) as string[];
     } catch {
-        return ['en'];
+        return ['fr', 'en'];
     }
 })();
 
 const localizationForm = useForm({
     'localization.default_locale':
-        props.settings['localization.default_locale'] ?? 'en',
+        props.settings['localization.default_locale'] ?? 'fr',
     'localization.supported_locales': parsedLocales,
     'localization.timezone': props.settings['localization.timezone'] ?? 'UTC',
 });
@@ -107,8 +107,8 @@ const authForm = useForm({
 const zohoSecretInput = ref('');
 
 const availableLocales = [
-    { code: 'en', label: 'English' },
     { code: 'fr', label: 'Français' },
+    { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
     { code: 'ar', label: 'العربية' },
     { code: 'de', label: 'Deutsch' },

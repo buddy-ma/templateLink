@@ -31,7 +31,7 @@ class RoleController extends Controller
                 'guard_name' => $role->guard_name,
                 'permissions' => $role->permissions->pluck('name')->values()->all(),
                 'users_count' => $role->users_count,
-                'protected' => $role->name === Acl::PROTECTED_ROLE_NAME,
+                'protected' => Acl::isProtectedRole($role->name),
             ]);
 
         $permissions = Permission::query()
@@ -73,8 +73,8 @@ class RoleController extends Controller
             abort(404);
         }
 
-        if ($role->name === Acl::PROTECTED_ROLE_NAME && $request->filled('name') && $request->string('name')->toString() !== $role->name) {
-            return back()->withErrors(['name' => 'The admin role cannot be renamed.']);
+        if (Acl::isProtectedRole($role->name) && $request->filled('name') && $request->string('name')->toString() !== $role->name) {
+            return back()->withErrors(['name' => 'This role cannot be renamed.']);
         }
 
         $validated = $request->validated();
@@ -84,18 +84,20 @@ class RoleController extends Controller
             $role->save();
         }
 
-        if ($request->has('permission_names')) {
-            $names = $request->input('permission_names', []);
-            if ($role->name === Acl::PROTECTED_ROLE_NAME) {
-                $names = array_values(array_unique(array_merge(
-                    is_array($names) ? $names : [],
-                    ['access_admin', 'manage_roles'],
-                )));
-            }
-            $role->syncPermissions(is_array($names) ? $names : []);
+        /** @var list<string> $names */
+        $names = array_values(array_unique($validated['permission_names'] ?? []));
+
+        if (Acl::isProtectedRole($role->name)) {
+            $names = array_values(array_unique(array_merge(
+                $names,
+                ['access_admin', 'manage_roles'],
+            )));
         }
 
+        $role->syncPermissions($names);
+
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $role->unsetRelation('permissions');
 
         return back()->with('success', 'Role updated.');
     }
@@ -106,8 +108,8 @@ class RoleController extends Controller
             abort(404);
         }
 
-        if ($role->name === Acl::PROTECTED_ROLE_NAME) {
-            return back()->withErrors(['role' => 'The admin role cannot be deleted.']);
+        if (Acl::isProtectedRole($role->name)) {
+            return back()->withErrors(['role' => 'This role cannot be deleted.']);
         }
 
         if ($role->users()->count() > 0) {

@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import type { SharedNotifications } from '@/types/notifications';
 import type { AppSettings } from '@/types/settings';
 
 // Extend ImportMeta interface for Vite...
@@ -30,6 +31,7 @@ declare module '@inertiajs/core' {
                 success?: string | null;
                 error?: string | null;
             };
+            notifications: SharedNotifications;
             [key: string]: unknown;
         };
     }

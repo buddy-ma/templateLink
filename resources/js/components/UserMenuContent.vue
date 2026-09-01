@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { LogOut, Settings, Settings2, UserX } from 'lucide-vue-next';
+import { LogOut, Settings, UserX } from 'lucide-vue-next';
 import { computed } from 'vue';
 import {
     DropdownMenuGroup,
@@ -18,11 +18,6 @@ const props = defineProps<{
 }>();
 
 const page = usePage();
-
-const isAdminRole = computed(() => {
-    const roles = props.user.roles;
-    return Array.isArray(roles) && roles.includes('admin');
-});
 
 const impersonationActive = computed(() => page.props.impersonation?.active === true);
 
@@ -58,13 +53,6 @@ function stopImpersonating(): void {
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
                 <Settings class="mr-2 h-4 w-4" />
                 Settings
-            </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem v-if="isAdminRole" :as-child="true">
-            <Link class="block w-full cursor-pointer" href="/admin/settings">
-                <Settings2 class="mr-2 h-4 w-4" />
-                App Settings
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>

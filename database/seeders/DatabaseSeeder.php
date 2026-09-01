@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ],
         );
-        $user->assignRole('admin');
+        $user->syncRoles(['admin']);
 
         $developer = User::firstOrCreate(
             ['email' => 'developer@example.com'],
@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ],
         );
-        $developer->assignRole('developer');
+        $developer->syncRoles(['developer']);
+
+        $this->call(DemandDemoSeeder::class);
     }
 }

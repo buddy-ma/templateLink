@@ -14,13 +14,13 @@ class SetLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $supportedLocales = $this->settings->get('localization.supported_locales', ['en']);
+        $supportedLocales = $this->settings->get('localization.supported_locales', ['fr', 'en']);
 
         if (is_string($supportedLocales)) {
-            $supportedLocales = json_decode($supportedLocales, true) ?? ['en'];
+            $supportedLocales = json_decode($supportedLocales, true) ?? ['fr', 'en'];
         }
 
-        $default = $this->settings->get('localization.default_locale', config('app.locale', 'en'));
+        $default = $this->settings->get('localization.default_locale', config('app.locale', 'fr'));
 
         // Priority: user session -> cookie -> DB default -> env default
         $locale = $request->session()->get('locale')

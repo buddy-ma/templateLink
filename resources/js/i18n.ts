@@ -16,7 +16,7 @@ const messages = Object.fromEntries(
 export const i18n = createI18n({
     legacy: false,
     globalInjection: true,
-    locale: (typeof document !== 'undefined' ? document.documentElement.lang : '') || 'en',
+    locale: (typeof document !== 'undefined' ? document.documentElement.lang : '') || 'fr',
     fallbackLocale: 'en',
     messages,
 });

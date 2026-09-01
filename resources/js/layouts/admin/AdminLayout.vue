@@ -9,17 +9,20 @@ import { useAppName } from '@/composables/useAppSettings';
 const appName = useAppName();
 
 const navItems = [
-    { label: 'Settings', href: '/admin/settings' },
+    { label: 'Translations', href: '/admin/translations' },
+    { label: 'Roles', href: '/admin/roles' },
+    { label: 'Design guide', href: '/admin/design-guide' },
 ];
 </script>
 
 <template>
     <BrandProvider>
         <div class="flex min-h-screen flex-col">
-            <!-- Top bar -->
-            <header class="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
+            <header
+                class="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm"
+            >
                 <div class="container flex h-14 items-center gap-4 px-4">
-                    <Link href="/admin/settings" class="font-semibold">
+                    <Link href="/admin/translations" class="font-semibold">
                         {{ appName }} — Admin
                     </Link>
                     <Separator orientation="vertical" class="h-5" />

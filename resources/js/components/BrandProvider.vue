@@ -8,15 +8,6 @@ const branding = useBranding();
 const GOOGLE_LINK_ID = 'app-branding-google-font';
 const UPLOAD_STYLE_ID = 'app-branding-upload-font';
 
-function applyBrandColors(): void {
-    const root = document.documentElement;
-    const b = branding.value;
-    root.style.setProperty('--primary', `hsl(${b.primaryColor})`);
-    root.style.setProperty('--primary-foreground', `hsl(${b.primaryForegroundColor})`);
-    root.style.setProperty('--sidebar-primary', `hsl(${b.sidebarPrimaryColor})`);
-    root.style.setProperty('--sidebar-primary-foreground', `hsl(${b.primaryForegroundColor})`);
-}
-
 function applyFontStack(): void {
     const root = document.documentElement;
     const stack = branding.value.fontStack;
@@ -78,7 +69,7 @@ function applyFonts(): void {
 }
 
 function applyAll(): void {
-    applyBrandColors();
+    // Brand colors are fixed in CSS (#2C497F) — not loaded from app settings.
     applyFonts();
 }
 

@@ -16,8 +16,8 @@
         "laravel/socialite": "*",
         "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.14",
-        "socialiteproviders/zoho": "^4.1",
-        "spatie/laravel-permission": "*"
+        "spatie/laravel-permission": "*",
+        "sunspikes/clamav-validator": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

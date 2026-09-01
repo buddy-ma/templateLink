@@ -27,7 +27,6 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs = computed<BreadcrumbItem[]>(() => [
-    { title: 'App Settings', href: '/admin/settings' },
     { title: t('admin.translations.title'), href: '/admin/translations' },
 ]);
 

@@ -1,11 +1,9 @@
 <?php
 
 use App\Models\User;
-use App\Services\AppSettingsService;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 it('forbids guests from roles page', function () {
     $this->get('/admin/roles')->assertRedirect('/login');
@@ -44,6 +42,50 @@ it('allows admin to create a custom role with permissions', function () {
     expect(Role::query()->where('name', 'editor')->where('guard_name', 'web')->exists())->toBeTrue();
 });
 
+it('applies updated role permissions to users on the next request', function () {
+    $admin = User::factory()->admin()->create();
+    $member = User::factory()->projectManager()->create();
+    $role = Role::query()->where('name', 'project_manager')->where('guard_name', 'web')->firstOrFail();
+
+    $role->syncPermissions(['demands.access', 'demands.create']);
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    expect($member->fresh()->can('drive.access'))->toBeFalse();
+
+    $this->actingAs($admin)
+        ->put("/admin/roles/{$role->id}", [
+            'name' => 'project_manager',
+            'permission_names' => [
+                'demands.access',
+                'demands.create',
+                'drive.access',
+                'drive.upload',
+            ],
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $member = $member->fresh();
+    $member->unsetRelation('roles');
+    $member->unsetRelation('permissions');
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    expect($member->can('drive.access'))->toBeTrue()
+        ->and($member->getAllPermissions()->pluck('name')->all())
+        ->toContain('drive.access', 'drive.upload');
+
+    $this->withoutVite()
+        ->actingAs($member)
+        ->get('/dashboard')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('auth.user.permissions')
+            ->where(
+                'auth.user.permissions',
+                fn ($permissions): bool => collect($permissions)->contains('drive.access'),
+            ));
+});
+
 it('forbids deleting the admin role', function () {
     $admin = User::factory()->admin()->create();
     $adminRole = Role::query()->where('name', 'admin')->where('guard_name', 'web')->firstOrFail();
@@ -72,20 +114,4 @@ it('forbids deleting a core permission', function () {
     $this->actingAs($admin)
         ->delete("/admin/permissions/{$perm->id}")
         ->assertSessionHasErrors('permission');
-});
-
-it('admin can upload favicon', function () {
-    Storage::fake('public');
-    $admin = User::factory()->admin()->create();
-
-    $file = UploadedFile::fake()->image('favicon.png', 32, 32);
-
-    $this->actingAs($admin)
-        ->post('/admin/settings/favicon', [
-            'favicon' => $file,
-        ])
-        ->assertRedirect();
-
-    $url = app(AppSettingsService::class)->get('branding.favicon_url');
-    expect($url)->toBeString()->not->toBeEmpty();
 });

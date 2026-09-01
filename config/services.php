@@ -36,9 +36,18 @@ return [
     ],
 
     'zoho' => [
-        'client_id'     => env('ZOHO_CLIENT_ID'),
+        'client_id' => env('ZOHO_CLIENT_ID'),
         'client_secret' => env('ZOHO_CLIENT_SECRET'),
-        'redirect'      => env('ZOHO_REDIRECT_URI', '/auth/zoho/callback'),
+        'redirect' => env('ZOHO_REDIRECT_URI', rtrim((string) env('APP_URL', 'http://localhost'), '/').'/auth/zoho/callback'),
+        // accounts.zoho.com, accounts.zoho.eu, accounts.zoho.in, etc.
+        'domain' => env('ZOHO_DOMAIN') ?: (env('ZOHO_ACCOUNTS_URL')
+            ? str_replace(['https://', 'http://'], '', env('ZOHO_ACCOUNTS_URL'))
+            : 'accounts.zoho.com'),
+        // First-time email→account linking is only allowed for these domains when Zoho omits email_verified.
+        'trusted_email_domains' => array_values(array_filter(array_map(
+            'trim',
+            explode(',', env('ZOHO_TRUSTED_EMAIL_DOMAINS', 'laprophan.com'))
+        ))),
     ],
 
 ];

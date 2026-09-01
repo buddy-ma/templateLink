@@ -11,7 +11,6 @@ import { useBranding } from '@/composables/useAppSettings';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'App Settings', href: '/admin/settings' },
     { title: 'Design guide', href: '/admin/design-guide' },
 ];
 

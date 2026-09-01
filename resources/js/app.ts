@@ -55,9 +55,12 @@ createInertiaApp({
     },
 });
 
-// Initialize theme with server-provided default (falls back to 'system')
+// Initialize theme with server-provided default / forced mode
 const pageData = document.getElementById('app')?.dataset?.page;
-const initialAppearance = pageData
-    ? (JSON.parse(pageData)?.props?.appSettings?.theme?.defaultAppearance ?? 'system')
-    : 'system';
-initializeTheme(initialAppearance);
+const themeSettings = pageData
+    ? JSON.parse(pageData)?.props?.appSettings?.theme
+    : null;
+initializeTheme(
+    themeSettings?.defaultAppearance ?? 'system',
+    themeSettings?.forceAppearance ?? null,
+);

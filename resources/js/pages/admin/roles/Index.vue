@@ -47,7 +47,6 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'App Settings', href: '/admin/settings' },
     { title: 'Roles & permissions', href: '/admin/roles' },
 ];
 
@@ -59,10 +58,10 @@ const createForm = useForm({
 
 const editOpen = ref(false);
 const editingRole = ref<RoleRow | null>(null);
-const editForm = useForm({
-    name: '',
-    permission_names: [] as string[],
-});
+const editName = ref('');
+const editPermissionNames = ref<string[]>([]);
+const editProcessing = ref(false);
+const editErrors = ref<{ name?: string; permission_names?: string }>({});
 
 const permCreateOpen = ref(false);
 const permCreateForm = useForm({
@@ -75,14 +74,6 @@ const permEditForm = useForm({
     name: '',
 });
 
-watch(editingRole, (role) => {
-    if (role) {
-        editForm.reset();
-        editForm.name = role.name;
-        editForm.permission_names = [...role.permissions];
-    }
-});
-
 watch(editingPerm, (p) => {
     if (p) {
         permEditForm.reset();
@@ -93,29 +84,35 @@ watch(editingPerm, (p) => {
 function setCreatePermission(name: string, checked: boolean | 'indeterminate'): void {
     const on = checked === true;
     const list = createForm.permission_names;
-    const i = list.indexOf(name);
-    if (on && i === -1) {
-        list.push(name);
-    }
-    if (!on && i !== -1) {
-        list.splice(i, 1);
-    }
+    createForm.permission_names = on
+        ? list.includes(name)
+            ? list
+            : [...list, name]
+        : list.filter((item) => item !== name);
 }
 
 function setEditPermission(name: string, checked: boolean | 'indeterminate'): void {
+    if (
+        editingRole.value?.protected &&
+        (name === 'access_admin' || name === 'manage_roles')
+    ) {
+        return;
+    }
+
     const on = checked === true;
-    const list = editForm.permission_names;
-    const i = list.indexOf(name);
-    if (on && i === -1) {
-        list.push(name);
-    }
-    if (!on && i !== -1) {
-        list.splice(i, 1);
-    }
+    const list = editPermissionNames.value;
+    editPermissionNames.value = on
+        ? list.includes(name)
+            ? [...list]
+            : [...list, name]
+        : list.filter((item) => item !== name);
 }
 
 function openEdit(role: RoleRow): void {
     editingRole.value = role;
+    editName.value = role.name;
+    editPermissionNames.value = [...role.permissions];
+    editErrors.value = {};
     editOpen.value = true;
 }
 
@@ -134,13 +131,33 @@ function submitEdit(): void {
     if (!editingRole.value) {
         return;
     }
-    editForm.put(`/admin/roles/${editingRole.value.id}`, {
-        preserveScroll: true,
-        onSuccess: () => {
-            editOpen.value = false;
-            editingRole.value = null;
+
+    editProcessing.value = true;
+    editErrors.value = {};
+
+    router.put(
+        `/admin/roles/${editingRole.value.id}`,
+        {
+            name: editName.value,
+            permission_names: [...editPermissionNames.value],
         },
-    });
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                editOpen.value = false;
+                editingRole.value = null;
+            },
+            onError: (errors) => {
+                editErrors.value = {
+                    name: errors.name,
+                    permission_names: errors.permission_names,
+                };
+            },
+            onFinish: () => {
+                editProcessing.value = false;
+            },
+        },
+    );
 }
 
 function destroyRole(role: RoleRow): void {
@@ -190,6 +207,12 @@ function destroyPerm(p: PermissionRow): void {
 
 function permChecked(list: string[], name: string): boolean {
     return list.includes(name);
+}
+
+function closeEdit(): void {
+    editOpen.value = false;
+    editingRole.value = null;
+    editErrors.value = {};
 }
 </script>
 
@@ -405,13 +428,13 @@ function permChecked(list: string[], name: string): boolean {
                         <Label for="edit_role_name">Name</Label>
                         <Input
                             id="edit_role_name"
-                            v-model="editForm.name"
+                            v-model="editName"
                             class="font-mono text-sm"
                             :disabled="editingRole.protected"
                             autocomplete="off"
                         />
-                        <p v-if="editForm.errors.name" class="text-destructive text-xs">
-                            {{ editForm.errors.name }}
+                        <p v-if="editErrors.name" class="text-destructive text-xs">
+                            {{ editErrors.name }}
                         </p>
                     </div>
                     <div class="space-y-2">
@@ -436,17 +459,23 @@ function permChecked(list: string[], name: string): boolean {
                                                     p.name === 'manage_roles'),
                                         )
                                     "
-                                    :checked="permChecked(editForm.permission_names, p.name)"
-                                    @update:checked="(v: boolean | 'indeterminate') => setEditPermission(p.name, v)"
+                                    :checked="permChecked(editPermissionNames, p.name)"
+                                    @update:checked="
+                                        (v: boolean | 'indeterminate') =>
+                                            setEditPermission(p.name, v)
+                                    "
                                 />
                                 <span class="font-mono text-xs">{{ p.name }}</span>
                             </label>
                         </div>
+                        <p v-if="editErrors.permission_names" class="text-destructive text-xs">
+                            {{ editErrors.permission_names }}
+                        </p>
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="button" variant="outline" @click="editOpen = false">Cancel</Button>
-                    <Button type="button" :disabled="editForm.processing" @click="submitEdit">
+                    <Button type="button" variant="outline" @click="closeEdit">Cancel</Button>
+                    <Button type="button" :disabled="editProcessing" @click="submitEdit">
                         Save
                     </Button>
                 </DialogFooter>

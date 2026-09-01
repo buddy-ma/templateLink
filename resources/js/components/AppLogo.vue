@@ -2,6 +2,16 @@
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { useBranding } from '@/composables/useAppSettings';
 
+withDefaults(
+    defineProps<{
+        /** Use a white mark on brand-colored surfaces (e.g. sidebar). */
+        inverted?: boolean;
+    }>(),
+    {
+        inverted: false,
+    },
+);
+
 const branding = useBranding();
 </script>
 
@@ -12,10 +22,12 @@ const branding = useBranding();
             :src="branding.logoUrl"
             :alt="branding.appName"
             class="h-12 w-auto object-contain"
+            :class="inverted ? 'brightness-0 invert' : ''"
         />
         <AppLogoIcon
             v-else
-            class="size-5 fill-current text-white dark:text-black"
+            class="size-5 fill-current"
+            :class="inverted ? 'text-white' : 'text-foreground'"
         />
     </div>
 </template>

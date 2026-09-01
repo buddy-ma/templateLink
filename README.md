@@ -151,9 +151,13 @@ Create a server OAuth client at [Zoho API Console](https://api-console.zoho.com/
 ZOHO_CLIENT_ID=your_client_id
 ZOHO_CLIENT_SECRET=your_client_secret
 ZOHO_REDIRECT_URI="${APP_URL}/auth/zoho/callback"
+ZOHO_DOMAIN=accounts.zoho.eu
+ZOHO_TRUSTED_EMAIL_DOMAINS=laprophan.com
 ```
 
-Enable Zoho in **Admin → Authentication** after credentials are set.
+`ZOHO_DOMAIN` must match your Zoho data center (`accounts.zoho.com`, `.eu`, `.in`, …).
+
+Enable Zoho in **Admin → Authentication** after credentials are set. Users must already exist in the app (no auto-provision); first login links by verified Zoho email or a trusted corporate domain.
 
 ---
 
@@ -231,9 +235,10 @@ Uploads use the **`public`** disk (`storage/app/public`), so URLs look like `/st
 
 ## Zoho OAuth
 
-1. Create OAuth credentials in Zoho.
-2. Redirect URI: `{APP_URL}/auth/zoho/callback`.
-3. Set env vars; optionally override from DB in **Admin → Authentication**.
+1. Create a **Server-based** OAuth client in the [Zoho API Console](https://api-console.zoho.com/).
+2. Redirect URI: `{APP_URL}/auth/zoho/callback` (must match exactly).
+3. Set `ZOHO_*` env vars (including `ZOHO_DOMAIN` for your data center); optionally override client id/secret from DB in **Admin → Authentication**.
+4. Create the local user first (admin), then sign in with Zoho — the account is linked via `zoho_id` / verified email.
 
 ---
 

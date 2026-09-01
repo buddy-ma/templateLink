@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AppSettingsController;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -18,13 +17,7 @@ Route::middleware(['auth', 'verified', 'permission:impersonate_users'])
     });
 
 Route::middleware(['auth', 'verified', 'permission:access_admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::redirect('/', '/admin/settings');
-
-    Route::get('settings', [AppSettingsController::class, 'index'])->name('settings.index');
-    Route::put('settings', [AppSettingsController::class, 'update'])->name('settings.update');
-    Route::post('settings/logo', [AppSettingsController::class, 'uploadLogo'])->name('settings.logo');
-    Route::post('settings/favicon', [AppSettingsController::class, 'uploadFavicon'])->name('settings.favicon');
-    Route::post('settings/font', [AppSettingsController::class, 'uploadFont'])->name('settings.font');
+    Route::redirect('/', '/admin/translations');
 
     Route::get('translations', [TranslationController::class, 'index'])->name('translations.index');
     Route::put('translations/{locale}', [TranslationController::class, 'update'])

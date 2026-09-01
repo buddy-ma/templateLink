@@ -60,6 +60,39 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
             ],
+            'notifications' => $this->buildNotificationsPayload($user),
+        ];
+    }
+
+    /**
+     * @return array{unread_count: int, recent: array<int, array<string, mixed>>}
+     */
+    private function buildNotificationsPayload(?User $user): array
+    {
+        if (! $user instanceof User) {
+            return [
+                'unread_count' => 0,
+                'recent' => [],
+            ];
+        }
+
+        $recent = $user->notifications()
+            ->latest()
+            ->limit(8)
+            ->get()
+            ->map(static fn ($notification): array => [
+                'id' => $notification->id,
+                'type' => class_basename($notification->type),
+                'data' => $notification->data,
+                'read_at' => $notification->read_at?->toIso8601String(),
+                'created_at' => $notification->created_at?->toIso8601String(),
+            ])
+            ->values()
+            ->all();
+
+        return [
+            'unread_count' => $user->unreadNotifications()->count(),
+            'recent' => $recent,
         ];
     }
 
@@ -70,10 +103,10 @@ class HandleInertiaRequests extends Middleware
      */
     private function buildAppSettings(): array
     {
-        $supportedLocales = $this->settings->get('localization.supported_locales', ['en']);
+        $supportedLocales = $this->settings->get('localization.supported_locales', ['fr', 'en']);
 
         if (is_string($supportedLocales)) {
-            $supportedLocales = json_decode($supportedLocales, true) ?? ['en'];
+            $supportedLocales = json_decode($supportedLocales, true) ?? ['fr', 'en'];
         }
 
         $fontSource = $this->settings->get('branding.font_source');
@@ -85,9 +118,10 @@ class HandleInertiaRequests extends Middleware
             'branding' => [
                 'appName' => $this->settings->get('branding.app_name', config('app.name')),
                 'logoUrl' => $this->settings->get('branding.logo_url'),
-                'primaryColor' => $this->settings->get('branding.primary_color', '0 0% 9%'),
-                'primaryForegroundColor' => $this->settings->get('branding.primary_foreground_color', '0 0% 98%'),
-                'sidebarPrimaryColor' => $this->settings->get('branding.sidebar_primary_color', '0 0% 10%'),
+                // Fixed brand primary #2C497F — not configurable via app settings.
+                'primaryColor' => '219 49% 34%',
+                'primaryForegroundColor' => '0 0% 100%',
+                'sidebarPrimaryColor' => '219 49% 34%',
                 'fontSource' => (string) $fontSource,
                 'fontPreset' => (string) ($this->settings->get('branding.font_preset') ?? $this->settings->get('branding.font_family', 'instrument-sans')),
                 'googleFontFamily' => (string) $this->settings->get('branding.google_font_family', 'Poppins'),
@@ -100,7 +134,7 @@ class HandleInertiaRequests extends Middleware
                 'faviconUrl' => $this->settings->get('branding.favicon_url'),
             ],
             'localization' => [
-                'defaultLocale' => $this->settings->get('localization.default_locale', 'en'),
+                'defaultLocale' => $this->settings->get('localization.default_locale', 'fr'),
                 'supportedLocales' => $supportedLocales,
                 'currentLocale' => app()->getLocale(),
                 'timezone' => $this->settings->get('localization.timezone', 'UTC'),
@@ -121,12 +155,30 @@ class HandleInertiaRequests extends Middleware
      */
     private function serializeUserForInertia(User $user): array
     {
-        $data = $user->toArray();
-        $data['permissions'] = $user->getAllPermissions()->pluck('name')->values()->all();
-        $data['roles'] = $user->getRoleNames()->values()->all();
-        $data['is_admin'] = $user->can('access_admin');
+        // Drop any eager-loaded relations so Spatie resolves roles/permissions fresh
+        // (important after admin role edits in the same browser session).
+        $user->unsetRelation('roles');
+        $user->unsetRelation('permissions');
 
-        return $data;
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => $user->avatar,
+            'email_verified_at' => $user->email_verified_at?->toIso8601String(),
+            'created_at' => $user->created_at?->toIso8601String(),
+            'updated_at' => $user->updated_at?->toIso8601String(),
+            // Always plain string[] for the SPA (never Eloquent collections/models).
+            'permissions' => array_values(array_map(
+                static fn ($name): string => (string) $name,
+                $user->getAllPermissions()->pluck('name')->all(),
+            )),
+            'roles' => array_values(array_map(
+                static fn ($name): string => (string) $name,
+                $user->getRoleNames()->all(),
+            )),
+            'is_admin' => $user->can('access_admin'),
+        ];
     }
 
     /**

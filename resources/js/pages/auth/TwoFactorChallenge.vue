@@ -10,7 +10,7 @@ import {
     InputOTPSlot,
 } from '@/components/ui/input-otp';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { formPropsFromRoute } from '@/wayfinder';
+import { formPropsFromRoute } from '@/lib/formPropsFromRoute';
 import { store } from '@/routes/two-factor/login';
 import type { TwoFactorConfigContent } from '@/types';
 

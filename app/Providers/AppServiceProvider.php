@@ -2,21 +2,28 @@
 
 namespace App\Providers;
 
+use App\Models\Demand;
+use App\Models\Drive\DriveFile;
+use App\Models\Drive\DriveFolder;
 use App\Models\User;
+use App\Policies\DemandPolicy;
+use App\Policies\Drive\DriveFilePolicy;
+use App\Policies\Drive\DriveFolderPolicy;
 use App\Policies\UserPolicy;
 use App\Services\AppSettingsService;
+use App\Services\Drive\DriveAccessService;
+use App\Services\Drive\DriveNotificationService;
+use App\Services\Drive\DriveQuotaService;
+use App\Services\Drive\DriveWorkflowService;
 use App\Support\BrandingFont;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use SocialiteProviders\Manager\SocialiteWasCalled;
-use SocialiteProviders\Zoho\ZohoExtendSocialite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(AppSettingsService::class);
+        $this->app->singleton(DriveAccessService::class);
+        $this->app->singleton(DriveQuotaService::class);
+        $this->app->singleton(DriveNotificationService::class);
+        $this->app->singleton(DriveWorkflowService::class);
     }
 
     /**
@@ -34,9 +45,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Demand::class, DemandPolicy::class);
+        Gate::policy(DriveFolder::class, DriveFolderPolicy::class);
+        Gate::policy(DriveFile::class, DriveFilePolicy::class);
 
         $this->configureDefaults();
-        $this->configureSocialite();
         $this->configureRootViewFonts();
         $this->configureZohoFromSettings();
     }
@@ -76,14 +89,6 @@ class AppServiceProvider extends ServiceProvider
                 // Invalid ciphertext; keep env fallback
             }
         }
-    }
-
-    /**
-     * Register the Zoho Socialite provider.
-     */
-    protected function configureSocialite(): void
-    {
-        Event::listen(SocialiteWasCalled::class, ZohoExtendSocialite::class);
     }
 
     /**

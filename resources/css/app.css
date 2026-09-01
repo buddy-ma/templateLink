@@ -2,6 +2,51 @@
 
 @import 'tw-animate-css';
 
+/* TipTap / demand reason rich text */
+.rich-text-body {
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.rich-text-body :where(p + p) {
+    margin-top: 0.5rem;
+}
+
+.rich-text-body :where(ul, ol) {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+}
+
+.rich-text-body :where(ul) {
+    list-style: disc;
+}
+
+.rich-text-body :where(ol) {
+    list-style: decimal;
+}
+
+.rich-text-body :where(h2) {
+    margin: 0.75rem 0 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.rich-text-body :where(strong) {
+    font-weight: 600;
+}
+
+.rich-text-body :where(em) {
+    font-style: italic;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+    color: var(--muted-foreground);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
@@ -91,75 +136,166 @@
 
 :root {
     --background: hsl(0 0% 100%);
-    --foreground: hsl(0 0% 3.9%);
+    --foreground: hsl(236 27% 14%);
     --card: hsl(0 0% 100%);
-    --card-foreground: hsl(0 0% 3.9%);
+    --card-foreground: hsl(236 27% 14%);
     --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(0 0% 3.9%);
-    --primary: hsl(0 0% 9%);
-    --primary-foreground: hsl(0 0% 98%);
-    --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: hsl(0 0% 9%);
-    --muted: hsl(0 0% 96.1%);
-    --muted-foreground: hsl(0 0% 45.1%);
-    --accent: hsl(0 0% 96.1%);
-    --accent-foreground: hsl(0 0% 9%);
+    --popover-foreground: hsl(236 27% 14%);
+    /* Brand primary: #2C497F (YInMn Blue) */
+    --primary: hsl(219 49% 34%);
+    --primary-foreground: hsl(0 0% 100%);
+    /* Soft lavender wash: #E3E4FA */
+    --secondary: hsl(237 55% 96%);
+    --secondary-foreground: hsl(236 27% 20%);
+    --muted: hsl(230 30% 96%);
+    --muted-foreground: hsl(223 18% 40%);
+    --accent: hsl(237 70% 94%);
+    --accent-foreground: hsl(236 27% 20%);
     --destructive: hsl(0 84.2% 60.2%);
     --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 92.8%);
-    --input: hsl(0 0% 89.8%);
-    --ring: hsl(0 0% 3.9%);
-    --chart-1: hsl(12 76% 61%);
-    --chart-2: hsl(173 58% 39%);
-    --chart-3: hsl(197 37% 24%);
-    --chart-4: hsl(43 74% 66%);
-    --chart-5: hsl(27 87% 67%);
+    --border: hsl(223 22% 88%);
+    --input: hsl(223 22% 88%);
+    --ring: hsl(219 49% 34%);
+    /* Palette: #2C497F, #293961, #8897BD, #262842, #E3E4FA */
+    --chart-1: hsl(219 49% 34%);
+    --chart-2: hsl(223 48% 27%);
+    --chart-3: hsl(223 29% 64%);
+    --chart-4: hsl(236 27% 20%);
+    --chart-5: hsl(237 70% 78%);
     --radius: 0.5rem;
-    --sidebar-background: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(0 0% 10%);
-    --sidebar-primary-foreground: hsl(0 0% 98%);
-    --sidebar-accent: hsl(0 0% 94%);
-    --sidebar-accent-foreground: hsl(0 0% 30%);
-    --sidebar-border: hsl(0 0% 91%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(0 0% 98%);
+    /* Branded sidebar: glass over Space cadet */
+    --layout-background: #262842;
+    --sidebar-background: hsl(236 27% 18% / 0.38);
+    --sidebar-foreground: hsl(0 0% 100%);
+    --sidebar-primary: hsl(0 0% 100%);
+    --sidebar-primary-foreground: #2c497f;
+    --sidebar-accent: hsl(0 0% 100% / 0.16);
+    --sidebar-accent-foreground: hsl(0 0% 100%);
+    --sidebar-border: hsl(0 0% 100% / 0.28);
+    --sidebar-ring: hsl(0 0% 100% / 0.45);
+    --sidebar: hsl(236 27% 18% / 0.38);
 }
 
 .dark {
-    --background: hsl(0 0% 3.9%);
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(0 0% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(0 0% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(0 0% 9%);
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(0 0% 16.08%);
-    --muted-foreground: hsl(0 0% 63.9%);
-    --accent: hsl(0 0% 14.9%);
-    --accent-foreground: hsl(0 0% 98%);
+    --background: hsl(236 27% 8%);
+    --foreground: hsl(237 70% 96%);
+    --card: hsl(236 27% 10%);
+    --card-foreground: hsl(237 70% 96%);
+    --popover: hsl(236 27% 10%);
+    --popover-foreground: hsl(237 70% 96%);
+    /* Brand primary (lighter for dark UI): Cool gray / YInMn */
+    --primary: hsl(223 40% 68%);
+    --primary-foreground: hsl(236 27% 12%);
+    --secondary: hsl(223 28% 16%);
+    --secondary-foreground: hsl(237 70% 96%);
+    --muted: hsl(223 22% 16%);
+    --muted-foreground: hsl(223 20% 68%);
+    --accent: hsl(223 28% 18%);
+    --accent-foreground: hsl(237 70% 96%);
     --destructive: hsl(0 84% 60%);
     --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(0 0% 14.9%);
-    --input: hsl(0 0% 14.9%);
-    --ring: hsl(0 0% 83.1%);
-    --chart-1: hsl(220 70% 50%);
-    --chart-2: hsl(160 60% 45%);
-    --chart-3: hsl(30 80% 55%);
-    --chart-4: hsl(280 65% 60%);
-    --chart-5: hsl(340 75% 55%);
-    --sidebar-background: hsl(0 0% 7%);
-    --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: hsl(360, 100%, 100%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(0 0% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(240 5.9% 10%);
+    --border: hsl(223 22% 20%);
+    --input: hsl(223 22% 20%);
+    --ring: hsl(223 40% 68%);
+    --chart-1: hsl(223 40% 68%);
+    --chart-2: hsl(219 49% 48%);
+    --chart-3: hsl(223 29% 54%);
+    --chart-4: hsl(236 27% 36%);
+    --chart-5: hsl(237 45% 72%);
+    --layout-background: #1e2035;
+    --sidebar-background: hsl(236 27% 12% / 0.42);
+    --sidebar-foreground: hsl(0 0% 100%);
+    --sidebar-primary: hsl(0 0% 100%);
+    --sidebar-primary-foreground: #293961;
+    --sidebar-accent: hsl(0 0% 100% / 0.14);
+    --sidebar-accent-foreground: hsl(0 0% 100%);
+    --sidebar-border: hsl(0 0% 100% / 0.22);
+    --sidebar-ring: hsl(0 0% 100% / 0.4);
+    --sidebar: hsl(236 27% 12% / 0.42);
+}
+
+/* Depth behind the glass inset shell */
+[data-slot='sidebar-wrapper']:has([data-variant='inset']) {
+    background-color: var(--layout-background);
+    background-image:
+        radial-gradient(
+            ellipse 70% 55% at 8% 18%,
+            hsl(219 49% 34% / 0.55),
+            transparent 55%
+        ),
+        radial-gradient(
+            ellipse 55% 45% at 0% 88%,
+            hsl(223 48% 27% / 0.55),
+            transparent 50%
+        ),
+        linear-gradient(
+            160deg,
+            color-mix(in srgb, var(--layout-background) 70%, #2c497f) 0%,
+            var(--layout-background) 45%,
+            color-mix(in srgb, var(--layout-background) 80%, black) 100%
+        );
+}
+
+/* Frosted glass sidebar */
+.sidebar-brand-surface {
+    color: var(--sidebar-foreground);
+    background-color: transparent;
+    background-image:
+        linear-gradient(
+            165deg,
+            hsl(0 0% 100% / 0.22) 0%,
+            hsl(0 0% 100% / 0.06) 38%,
+            hsl(219 49% 28% / 0.18) 100%
+        ),
+        linear-gradient(180deg, hsl(223 40% 24% / 0.28), hsl(236 27% 14% / 0.4));
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid hsl(0 0% 100% / 0.28);
+    box-shadow:
+        inset 0 1px 0 0 hsl(0 0% 100% / 0.35),
+        inset 0 -1px 0 0 hsl(0 0% 100% / 0.06),
+        0 10px 40px hsl(236 40% 10% / 0.28);
+}
+
+.dark .sidebar-brand-surface {
+    background-image:
+        linear-gradient(
+            165deg,
+            hsl(0 0% 100% / 0.14) 0%,
+            hsl(0 0% 100% / 0.04) 40%,
+            hsl(219 40% 14% / 0.28) 100%
+        ),
+        linear-gradient(180deg, hsl(223 35% 16% / 0.35), hsl(236 27% 8% / 0.5));
+    border-color: hsl(0 0% 100% / 0.2);
+    box-shadow:
+        inset 0 1px 0 0 hsl(0 0% 100% / 0.22),
+        inset 0 -1px 0 0 hsl(0 0% 100% / 0.04),
+        0 10px 40px hsl(0 0% 0% / 0.35);
+}
+
+/* Keep nav labels/icons crisp white on the brand gradient */
+.sidebar-brand-surface [data-sidebar='menu-button'] {
+    color: hsl(0 0% 100%);
+}
+
+.sidebar-brand-surface [data-sidebar='menu-button']:hover,
+.sidebar-brand-surface [data-sidebar='menu-button'][data-active='true'],
+.sidebar-brand-surface [data-sidebar='menu-button'][data-state='open'] {
+    color: hsl(0 0% 100%);
+    background-color: hsl(0 0% 100% / 0.16);
+}
+
+.sidebar-brand-surface [data-sidebar='group-label'] {
+    color: hsl(0 0% 100% / 0.72);
+}
+
+.sidebar-brand-surface [data-sidebar='separator'] {
+    background-color: hsl(0 0% 100% / 0.22);
+}
+
+.sidebar-brand-surface [data-slot='avatar-fallback'] {
+    background-color: hsl(0 0% 100% / 0.2);
+    color: hsl(0 0% 100%);
 }
 
 @layer base {

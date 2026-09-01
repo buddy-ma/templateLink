@@ -15,6 +15,22 @@ class UpdateRoleRequest extends FormRequest
         return $this->user()?->can('manage_roles') ?? false;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $names = $this->input('permission_names', []);
+
+        if (! is_array($names)) {
+            $names = [];
+        }
+
+        $this->merge([
+            'permission_names' => array_values(array_unique(array_filter(
+                $names,
+                static fn ($name): bool => is_string($name) && $name !== '',
+            ))),
+        ]);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -34,7 +50,8 @@ class UpdateRoleRequest extends FormRequest
                     ->where('guard_name', 'web')
                     ->ignore($role->id),
             ],
-            'permission_names' => ['sometimes', 'array'],
+            // Always required on update so permissions cannot be silently skipped.
+            'permission_names' => ['required', 'array'],
             'permission_names.*' => [
                 'string',
                 Rule::exists('permissions', 'name')->where('guard_name', 'web'),

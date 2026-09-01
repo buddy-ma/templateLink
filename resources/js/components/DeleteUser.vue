@@ -17,7 +17,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { formPropsFromRoute } from '@/wayfinder';
+import { formPropsFromRoute } from '@/lib/formPropsFromRoute';
 
 const passwordInput = useTemplateRef('passwordInput');
 </script>
